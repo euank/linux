@@ -645,7 +645,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
 		pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
 			 dev->name, len, (unsigned long)ctx);
 		dev->stats.rx_length_errors++;
-		//goto err_skb;
+		goto err_skb;
 	}
 	head_skb = page_to_skb(vi, rq, page, offset, len, truesize);
 	curr_skb = head_skb;
@@ -672,7 +672,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
 			pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
 				 dev->name, len, (unsigned long)ctx);
 			dev->stats.rx_length_errors++;
-			//goto err_skb;
+			goto err_skb;
 		}
 
 		num_skb_frags = skb_shinfo(curr_skb)->nr_frags;
