@@ -639,13 +639,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
 	}
 	rcu_read_unlock();
 
-	if (unlikely(len > (unsigned long)ctx)) {
-		pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
-			 dev->name, len, (unsigned long)ctx);
-		dev->stats.rx_length_errors++;
-		goto err_skb;
-	}
-	truesize = (unsigned long)ctx;
+	truesize = max((unsigned long)len, (unsigned long)ctx);
 	head_skb = page_to_skb(vi, rq, page, offset, len, truesize);
 	curr_skb = head_skb;
 
@@ -665,13 +659,7 @@ static struct sk_buff *receive_mergeable(struct net_device *dev,
 		}
 
 		page = virt_to_head_page(buf);
-		if (unlikely(len > (unsigned long)ctx)) {
-			pr_debug("%s: rx error: len %u exceeds truesize %lu\n",
-				 dev->name, len, (unsigned long)ctx);
-			dev->stats.rx_length_errors++;
-			goto err_skb;
-		}
-		truesize = (unsigned long)ctx;
+		truesize = max((unsigned long)len, (unsigned long)ctx);
 
 		num_skb_frags = skb_shinfo(curr_skb)->nr_frags;
 		if (unlikely(num_skb_frags == MAX_SKB_FRAGS)) {
