@@ -1929,8 +1929,10 @@ void virtqueue_disable_cb(struct virtqueue *_vq)
 	/* If device triggered an event already it won't trigger one again:
 	 * no need to disable.
 	 */
-	if (vq->event_triggered)
+	if (vq->event_triggered) {
+		pr_debug("virtqueue: event triggered already, dont' disable cb again %p\n", vq);
 		return;
+	}
 
 	if (vq->packed_ring)
 		virtqueue_disable_cb_packed(_vq);
@@ -2064,8 +2066,10 @@ irqreturn_t vring_interrupt(int irq, void *_vq)
 		return IRQ_HANDLED;
 
 	/* Just a hint for performance: so it's ok that this can be racy! */
-	if (vq->event)
+	if (vq->event) {
+		pr_debug("virtqueue: event triggered again %p\n", vq);
 		vq->event_triggered = true;
+	}
 
 	pr_debug("virtqueue callback for %p (%p)\n", vq, vq->vq.callback);
 	if (vq->vq.callback)
