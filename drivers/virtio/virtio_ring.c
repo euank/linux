@@ -742,10 +742,11 @@ static void virtqueue_disable_cb_split(struct virtqueue *_vq)
 
 	if (!(vq->split.avail_flags_shadow & VRING_AVAIL_F_NO_INTERRUPT)) {
 		vq->split.avail_flags_shadow |= VRING_AVAIL_F_NO_INTERRUPT;
-		if (vq->event)
+		if (vq->event) {
+			pr_debug("virtqueue: split ring thing %p\n", vq);
 			/* TODO: this is a hack. Figure out a cleaner value to write. */
 			vring_used_event(&vq->split.vring) = 0x0;
-		else
+		} else
 			vq->split.vring.avail->flags =
 				cpu_to_virtio16(_vq->vdev,
 						vq->split.avail_flags_shadow);
@@ -1957,8 +1958,10 @@ unsigned virtqueue_enable_cb_prepare(struct virtqueue *_vq)
 {
 	struct vring_virtqueue *vq = to_vvq(_vq);
 
-	if (vq->event_triggered)
+	if (vq->event_triggered) {
+		pr_debug("virtqueue: event triggered false 1 %p\n", vq);
 		vq->event_triggered = false;
+	}
 
 	return vq->packed_ring ? virtqueue_enable_cb_prepare_packed(_vq) :
 				 virtqueue_enable_cb_prepare_split(_vq);
@@ -2023,8 +2026,10 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *_vq)
 {
 	struct vring_virtqueue *vq = to_vvq(_vq);
 
-	if (vq->event_triggered)
+	if (vq->event_triggered) {
+		pr_debug("virtqueue: event triggered false 2 %p\n", vq);
 		vq->event_triggered = false;
+	}
 
 	return vq->packed_ring ? virtqueue_enable_cb_delayed_packed(_vq) :
 				 virtqueue_enable_cb_delayed_split(_vq);
