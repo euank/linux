@@ -1932,7 +1932,8 @@ void virtqueue_disable_cb(struct virtqueue *_vq)
 	 */
 	if (vq->event_triggered) {
 		pr_debug("virtqueue: event triggered already, dont' disable cb again %p\n", vq);
-		return;
+		// Disable temporarily to debug issue
+		// return;
 	}
 
 	if (vq->packed_ring)
