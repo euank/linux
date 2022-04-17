@@ -1931,7 +1931,6 @@ void virtqueue_disable_cb(struct virtqueue *_vq)
 	 * no need to disable.
 	 */
 	if (vq->event_triggered) {
-		pr_info("virtqueue: event triggered already, don't disable cb again %px\n", vq);
 		return;
 	}
 
@@ -1959,8 +1958,7 @@ unsigned virtqueue_enable_cb_prepare(struct virtqueue *_vq)
 	struct vring_virtqueue *vq = to_vvq(_vq);
 
 	if (vq->event_triggered) {
-		pr_info("virtqueue: event triggered false 1 %px\n", vq);
-		vq->event_triggered = false;
+		// vq->event_triggered = false;
 	}
 
 	return vq->packed_ring ? virtqueue_enable_cb_prepare_packed(_vq) :
@@ -2027,8 +2025,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *_vq)
 	struct vring_virtqueue *vq = to_vvq(_vq);
 
 	if (vq->event_triggered) {
-		pr_info("virtqueue: event triggered false 2 %px\n", vq);
-		vq->event_triggered = false;
+		// vq->event_triggered = false;
 	}
 
 	return vq->packed_ring ? virtqueue_enable_cb_delayed_packed(_vq) :
@@ -2072,7 +2069,6 @@ irqreturn_t vring_interrupt(int irq, void *_vq)
 
 	/* Just a hint for performance: so it's ok that this can be racy! */
 	if (vq->event) {
-		pr_info("virtqueue: event triggered again %px\n", vq);
 		vq->event_triggered = true;
 	}
 
