@@ -743,7 +743,7 @@ static void virtqueue_disable_cb_split(struct virtqueue *_vq)
 	if (!(vq->split.avail_flags_shadow & VRING_AVAIL_F_NO_INTERRUPT)) {
 		vq->split.avail_flags_shadow |= VRING_AVAIL_F_NO_INTERRUPT;
 		if (vq->event) {
-			pr_info("virtqueue: split ring thing %p\n", vq);
+			pr_info("virtqueue: split ring thing %px\n", vq);
 			/* TODO: this is a hack. Figure out a cleaner value to write. */
 			vring_used_event(&vq->split.vring) = 0x0;
 		} else
@@ -1931,7 +1931,7 @@ void virtqueue_disable_cb(struct virtqueue *_vq)
 	 * no need to disable.
 	 */
 	if (vq->event_triggered) {
-		pr_info("virtqueue: event triggered already, don't disable cb again %p\n", vq);
+		pr_info("virtqueue: event triggered already, don't disable cb again %px\n", vq);
 		return;
 	}
 
@@ -1959,7 +1959,7 @@ unsigned virtqueue_enable_cb_prepare(struct virtqueue *_vq)
 	struct vring_virtqueue *vq = to_vvq(_vq);
 
 	if (vq->event_triggered) {
-		pr_info("virtqueue: event triggered false 1 %p\n", vq);
+		pr_info("virtqueue: event triggered false 1 %px\n", vq);
 		vq->event_triggered = false;
 	}
 
@@ -2027,7 +2027,7 @@ bool virtqueue_enable_cb_delayed(struct virtqueue *_vq)
 	struct vring_virtqueue *vq = to_vvq(_vq);
 
 	if (vq->event_triggered) {
-		pr_info("virtqueue: event triggered false 2 %p\n", vq);
+		pr_info("virtqueue: event triggered false 2 %px\n", vq);
 		vq->event_triggered = false;
 	}
 
@@ -2072,7 +2072,7 @@ irqreturn_t vring_interrupt(int irq, void *_vq)
 
 	/* Just a hint for performance: so it's ok that this can be racy! */
 	if (vq->event) {
-		pr_info("virtqueue: event triggered again %p\n", vq);
+		pr_info("virtqueue: event triggered again %px\n", vq);
 		vq->event_triggered = true;
 	}
 
