@@ -636,7 +636,8 @@ int __netpoll_setup(struct netpoll *np, struct net_device *ndev)
 		goto out;
 	}
 
-	if (!rcu_access_pointer(ndev->npinfo)) {
+	npinfo = rtnl_dereference(ndev->npinfo);
+	if (!npinfo) {
 		npinfo = kmalloc(sizeof(*npinfo), GFP_KERNEL);
 		if (!npinfo) {
 			err = -ENOMEM;
@@ -656,7 +657,6 @@ int __netpoll_setup(struct netpoll *np, struct net_device *ndev)
 				goto free_npinfo;
 		}
 	} else {
-		npinfo = rtnl_dereference(ndev->npinfo);
 		refcount_inc(&npinfo->refcnt);
 	}
 
