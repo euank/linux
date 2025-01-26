@@ -2470,8 +2470,8 @@ static struct platform_driver idtcm_driver = {
 	.driver = {
 		.name = "8a3400x-phc",
 	},
-	.probe = idtcm_probe,
-	.remove_new = idtcm_remove,
+	.probe  = idtcm_probe,
+	.remove = idtcm_remove,
 };
 
 module_platform_driver(idtcm_driver);

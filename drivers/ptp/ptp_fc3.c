@@ -1002,8 +1002,8 @@ static struct platform_driver idtfc3_driver = {
 	.driver = {
 		.name = "rc38xxx-phc",
 	},
-	.probe = idtfc3_probe,
-	.remove_new = idtfc3_remove,
+	.probe  = idtfc3_probe,
+	.remove = idtfc3_remove,
 };
 
 module_platform_driver(idtfc3_driver);
